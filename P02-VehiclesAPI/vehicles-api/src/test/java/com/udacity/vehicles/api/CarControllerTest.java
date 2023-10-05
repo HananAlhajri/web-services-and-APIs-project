@@ -20,10 +20,10 @@ import com.udacity.vehicles.service.CarService;
 import java.net.URI;
 import java.util.Collections;
 
-import lombok.RequiredArgsConstructor;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.AutoConfigureJsonTesters;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -38,13 +38,15 @@ import org.springframework.test.web.servlet.MockMvc;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@RequiredArgsConstructor
 @AutoConfigureMockMvc
 @AutoConfigureJsonTesters
 public class CarControllerTest {
 
-    private final MockMvc mvc;
-    private final JacksonTester<Car> json;
+    @Autowired
+    private MockMvc mvc;
+
+    @Autowired
+    private JacksonTester<Car> json;
 
     @MockBean
     private CarService carService;
