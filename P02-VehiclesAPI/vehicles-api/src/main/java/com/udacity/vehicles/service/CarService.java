@@ -4,6 +4,8 @@ import com.udacity.vehicles.client.maps.MapsClient;
 import com.udacity.vehicles.client.prices.PriceClient;
 import com.udacity.vehicles.domain.car.Car;
 import com.udacity.vehicles.domain.car.CarRepository;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import lombok.RequiredArgsConstructor;
@@ -28,7 +30,13 @@ public class CarService {
      * @return a list of all vehicles in the CarRepository
      */
     public List<Car> list() {
-        return repository.findAll();
+        List<Car> carList = new ArrayList<>();
+        repository.findAll().forEach(car -> {
+            car.setPrice(priceClient.getPrice(car.getId()));
+            car.setLocation(mapsClient.getAddress(car.getLocation()));
+            carList.add(car);
+        });
+        return carList;
     }
 
     /**
@@ -37,9 +45,12 @@ public class CarService {
      * @return the requested car's information, including location and price
      */
     public Car findById(Long id) {
-
-        return repository.findById(id)
+        Car car = repository.findById(id)
                 .orElseThrow(() -> new CarNotFoundException("Sorry, the car looking for does not exist."));
+        car.setPrice(priceClient.getPrice(id));
+        car.setLocation(mapsClient.getAddress(car.getLocation()));
+        return car;
+
     }
 
     /**
